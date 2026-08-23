@@ -4,10 +4,12 @@ import '../models/products.dart';
 
 class ProductCard extends StatelessWidget {
   final Product product;
+  final void Function(Product product) onAddToCart;
 
   const ProductCard({
     super.key,
     required this.product,
+    required this.onAddToCart,
   });
 
   @override
@@ -19,6 +21,7 @@ class ProductCard extends StatelessWidget {
           MaterialPageRoute(
             builder: (context) => ProductDetailScreen(
               product: product,
+              onAddToCart: onAddToCart,
             ),
           ),
         );
@@ -89,7 +92,18 @@ class ProductCard extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        onAddToCart(product);
+
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              '${product.name} sepete eklendi.',
+                            ),
+                            duration: const Duration(seconds: 2,)
+                          ),
+                        );
+                      },
                       child: const Text('Sepete Ekle'),
                     ),
                   ),

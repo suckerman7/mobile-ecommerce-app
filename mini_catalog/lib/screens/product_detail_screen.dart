@@ -5,10 +5,12 @@ import '../models/products.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   final Product product;
+  final void Function(Product product) onAddToCart;
 
   const ProductDetailScreen({
     super.key,
     required this.product,
+    required this.onAddToCart,
   });
 
   @override
@@ -64,7 +66,18 @@ class ProductDetailScreen extends StatelessWidget {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  onAddToCart(product);
+
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        '${product.name} sepete eklendi.',
+                      ),
+                      duration: const Duration(seconds: 2,)
+                    ),
+                  );
+                },
                 child: const Text('Sepete Ekle'),
               ),
             ),

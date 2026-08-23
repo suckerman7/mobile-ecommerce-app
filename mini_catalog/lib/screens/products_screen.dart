@@ -4,7 +4,12 @@ import '../models/products.dart';
 import '../services/product_service.dart';
 
 class ProductsScreen extends StatelessWidget {
-  const ProductsScreen({super.key});
+  final void Function(Product product) onAddToCart;
+  
+  const ProductsScreen({
+    super.key,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +53,7 @@ class ProductsScreen extends StatelessWidget {
 
                   return ProductCard(
                     product: product,
+                    onAddToCart: onAddToCart,
                   );
                 },
             );

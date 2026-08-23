@@ -4,10 +4,32 @@ import 'products_screen.dart';
 import 'cart_screen.dart';
 
 import '../models/products.dart';
+import '../models/cart_item.dart';
 import '../services/product_service.dart';
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+  final void Function(Product product) onAddToCart;
+  final List<CartItem> cartItems;
+
+  final void Function(int productId) onIncrease;
+  final void Function(int productId) onDecrease;
+  final void Function(int productId) onRemove;
+
+  const HomeScreen({
+    super.key,
+    required this.onAddToCart,
+    required this.cartItems,
+    required this.onIncrease,
+    required this.onDecrease,
+    required this.onRemove,
+  });
+
+  int get cartItemCount {
+    return cartItems.fold(
+      0,
+      (total, item) => total + item.quantity,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,12 +42,21 @@ class HomeScreen extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const CartScreen(),
+                  builder: (context) => CartScreen(
+                    cartItems: cartItems,
+                    onIncrease: onIncrease,
+                    onDecrease: onDecrease,
+                    onRemove: onRemove,
+                  ),
                 ),
               );
             },
-            icon: const Icon(
-              Icons.shopping_cart_outlined,
+            icon: Badge(
+              label: Text('$cartItemCount'),
+              isLabelVisible: cartItemCount > 0,
+              child: const Icon(
+                Icons.shopping_cart_outlined,
+              ),
             ),
           ),
         ],
@@ -59,7 +90,9 @@ class HomeScreen extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => const ProductsScreen(), 
+                    builder: (context) => ProductsScreen(
+                      onAddToCart: onAddToCart,
+                    ), 
                   ),
                 );
               },
@@ -133,6 +166,7 @@ class HomeScreen extends StatelessWidget {
 
                       return ProductCard(
                         product: product,
+                        onAddToCart: onAddToCart,
                       );
                     },
                   );
