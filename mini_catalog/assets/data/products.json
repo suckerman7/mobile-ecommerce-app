@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Laptop",
+    "price": 999.99,
+    "imagePath": "assets/images/laptop.jpg",
+    "description": "Günlük kullanım ve profesyonel işler için güçlü bir laptop."
+  },
+  {
+    "id": 2,
+    "name": "Telefon",
+    "price": 699.99,
+    "imagePath": "assets/images/phone.jpg",
+    "description": "Modern tasarıma ve güçlü performansa sahip akıllı telefon."
+  },
+  {
+    "id": 3,
+    "name": "Kulaklık",
+    "price": 129.99,
+    "imagePath": "assets/images/headphones.jpg",
+    "description": "Yüksek ses kalitesi sunan kablosuz kulaklık."
+  },
+  {
+    "id": 4,
+    "name": "Akıllı Saat",
+    "price": 249.99,
+    "imagePath": "assets/images/watch.jpg",
+    "description": "Günlük aktivitelerinizi takip etmenizi sağlayan akıllı saat."
+  }
+]

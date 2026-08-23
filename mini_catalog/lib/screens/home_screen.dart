@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import '../widgets/product_card.dart';
+import 'products_screen.dart';
+import 'cart_screen.dart';
+
+import '../models/products.dart';
+import '../services/product_service.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -11,7 +16,14 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Mini Catalog'),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const CartScreen(),
+                ),
+              );
+            },
             icon: const Icon(
               Icons.shopping_cart_outlined,
             ),
@@ -40,6 +52,18 @@ class HomeScreen extends StatelessWidget {
                 fontSize: 16,
                 color: Colors.grey,
               ),
+            ),
+
+            ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const ProductsScreen(), 
+                  ),
+                );
+              },
+              child: const Text('Tüm Ürünleri Gör'),
             ),
 
             const SizedBox(height: 20),
@@ -76,45 +100,41 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(height: 20),
 
             Expanded(
-              child: GridView.builder(
-                itemCount: 4,
-                gridDelegate:
-                    const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 12,
-                  mainAxisSpacing: 12,
-                  childAspectRatio: 0.68,
-                ),
-                itemBuilder: (context, index) {
-                  final products = [
-                    {
-                      'name': 'Laptop',
-                      'price': 999.99,
-                      'image': 'assets/images/laptop.jpg',
-                    },
-                    {
-                      'name': 'Telefon',
-                      'price': 699.99,
-                      'image': 'assets/images/phone.jpg',
-                    },
-                    {
-                      'name': 'Kulaklık',
-                      'price': 129.99,
-                      'image': 'assets/images/headphones.jpg',
-                    },
-                    {
-                      'name': 'Akıllı Saat',
-                      'price': 249.99,
-                      'image': 'assets/images/watch.jpg',
-                    },
-                  ];
+              child: FutureBuilder<List<Product>>(
+                future: ProductService().loadProducts(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
 
-                  final product = products[index];
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Text(
+                        'Hata: ${snapshot.error}',
+                      ),
+                    );
+                  }
 
-                  return ProductCard(
-                    name: product['name'] as String,
-                    price: product['price'] as double,
-                    imagePath: product['image'] as String,
+                  final products = snapshot.data ?? [];
+
+                  return GridView.builder(
+                    itemCount: products.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 0.68,
+                    ),
+                    itemBuilder: (context, index) {
+                      final product = products[index];
+
+                      return ProductCard(
+                        product: product,
+                      );
+                    },
                   );
                 },
               ),
